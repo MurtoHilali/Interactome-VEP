@@ -4,18 +4,18 @@ with open("README.md", "r", encoding="utf-8") as readme_file:
     long_description = readme_file.read()
 
 setup(
-    name="ivep",
+    name="damia",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Murto Hilali",
+    author_email="hilali.murto@gmail.com",
     description="A collection of tools for analyzing protein interaction data",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/ivep",
+    url="https://github.com/MurtoHilali/damia",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "ivep=ivep.cli:main",
+            "damia=damia.cli:main",
         ],
     },
     classifiers=[
@@ -35,6 +35,8 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "pandas",
-        "pymol"
+        "pymol",
+        "numpy",
+        "scipy"
     ],
 )

@@ -13,7 +13,7 @@ This script calculates the Jaccard Index similarity between multiple TSV files. 
 Here is an example of how to run the script from the command line:
 
 ```bash
-python multi_table_jaccard.py file1.tsv file2.tsv file3.tsv --residues_only --remove_duplicate_residues
+python similarity.py file1.tsv file2.tsv file3.tsv --residues_only --remove_duplicate_residues
 ```
 
 In this example, the script will:

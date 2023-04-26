@@ -1,8 +1,8 @@
 import argparse
-from ivep.distance import distance
-from ivep.interface import interface
-from ivep.partners import partners
-from ivep.similarity import similarity
+from damia.distance import distance, avgdistance
+from damia.interface import interface
+from damia.partners import partners
+from damia.similarity import similarity
 
 def main():
     parser = argparse.ArgumentParser(description="Protein Interaction Analysis Tool")
@@ -12,6 +12,11 @@ def main():
     distance_parser = subparsers.add_parser("distance", help="Calculate average distance and occurrences of a chain-residue pair in multiple TSV files.")
     distance.add_arguments(distance_parser)
     distance_parser.set_defaults(func=distance.main)
+
+    # Average Distance subcommand
+    avgdistance_parser = subparsers.add_parser("avgdistance", help="Calculate average distance between carbon-alphas and -betas across all TSV files.")
+    distance.add_arguments(avgdistance_parser)
+    avgdistance_parser.set_defaults(func=avgdistance.main)
 
     # Interface subcommand
     interface_parser = subparsers.add_parser("interface", help="Filter and extract interface data from TSV files.")

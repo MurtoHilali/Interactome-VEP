@@ -43,7 +43,7 @@ GLY 42 A LEU 87 B
 
 The output TSV file will contain the following columns:
 
-1. Index: The index of the residue pair.
+1. Index: The index of the residue pairn from the `.ic` file.
 2. Chain1: Chain identifier of the first residue.
 3. Res1: Residue type of the first residue.
 4. Res1_num: Residue number of the first residue.

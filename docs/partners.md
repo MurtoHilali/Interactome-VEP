@@ -1,4 +1,4 @@
-# Chain-Residue Pair Analysis Tool
+# Partners: Chain-Residue Pair Analysis Tool
 
 This Python script analyzes occurrences of a chain-residue pair across multiple TSV files and calculates a consensus score based on their presence. The script also calculates the average distance (either alpha or beta) between the chain-residue pairs in the provided TSV files.
 

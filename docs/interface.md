@@ -10,7 +10,7 @@ This Python script analyzes occurrences of a chain-residue pair across multiple 
 ## Usage
 
 ```bash
-python chain_residue_pair_analysis.py <file_paths> <chain> <residue> [-d <distance_type>]
+python interface.py <file_paths> <chain> <residue> [-d <distance_type>]
 ```
 
 ### Arguments
@@ -25,7 +25,7 @@ python chain_residue_pair_analysis.py <file_paths> <chain> <residue> [-d <distan
 Suppose we have two TSV files `file1.tsv` and `file2.tsv`. We want to analyze the occurrences of the chain-residue pair A-42 with alpha distance. The command would look like:
 
 ```bash
-python chain_residue_pair_analysis.py file1.tsv file2.tsv A 42 -d alpha
+python interface.py file1.tsv file2.tsv A 42 -d alpha
 ```
 
 ## Output
