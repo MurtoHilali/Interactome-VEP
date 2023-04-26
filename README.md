@@ -1,4 +1,4 @@
-# DAMIA (iVEP)
+# DAMIA (Disease-Associated Missense Interactome Analysis)
 
 DAMIA is a collection of tools for predicting the impact of missense mutations on direct Protein-Protein Interactions (PPIs). It is designed to work with PDB entries or AlphaFold output. The current version of DAMIA includes four main functionalities: distance calculation, interface determination, interaction partners, and Jaccard index similarity.
 
