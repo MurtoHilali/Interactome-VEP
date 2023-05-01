@@ -36,6 +36,8 @@ def main():
     alpha_distances = np.array(alpha_distances, dtype=float)
     beta_distances = np.array(beta_distances, dtype=float)
 
+    ## TODO: Currently, the output for this function is plain, uninformative .txt file; 
+    ## it can be formatted better, perhaps as a TSV.
     with open(args.output, "w") as output_file:
         if args.flag in ["beta", "both"]:
             mean, std_dev, std_err = calculate_stats(beta_distances)

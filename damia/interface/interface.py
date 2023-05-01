@@ -12,6 +12,7 @@ def find_chain_residue(df: pd.DataFrame, chain: str, residue: int, distance_type
     count = filtered_df.shape[0]
 
     column = 'alpha_distance' if distance_type == 'alpha' else 'beta_distance'
+    ## TODO: Like we discussed, avg_distance may not be all that important; feel free to removes this.
     avg_distance = filtered_df[column].mean() if count > 0 else 0
     
     return (chain_residue_pair1 | chain_residue_pair2).any(), count, avg_distance

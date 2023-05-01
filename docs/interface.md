@@ -12,7 +12,7 @@ This Python script analyzes occurrences of a chain-residue pair across multiple 
 ```bash
 python interface.py <file_paths> <chain> <residue> [-d <distance_type>]
 ```
-
+a
 ### Arguments
 
 - `file_paths`: Paths to the TSV files (space-separated).

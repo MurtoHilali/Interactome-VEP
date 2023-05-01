@@ -13,10 +13,14 @@ def analyze_residue_interactions(input_files, target_chain, target_residue, outp
 
             for row in tsv_reader:
                 chain_a, residue_num_a, chain_b, residue_num_b = row[1], row[2], row[4], row[5]
+                ## TODO: Grab the distance metrics from the row as well
 
                 if (chain_a == target_chain and residue_num_a == target_residue) or (chain_b == target_chain and residue_num_b == target_residue):
                     interacting_residue = row[3] if chain_a == target_chain else row[0]
                     residue_counts[interacting_residue] += 1
+                    ## TODO: The current output for this loop is a dictionary; if you're capturing
+                    ## distance as well, a different data structure could also work: use you
+                    ## judgement.
 
     # Write the output data to the TSV file
     with open(output_file, 'w', newline='') as outfile:

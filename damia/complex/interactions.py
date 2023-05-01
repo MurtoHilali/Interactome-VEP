@@ -105,6 +105,12 @@ def extract_interaction_partners_mint(uniprot_ids, output_folder):
 # def extract_interaction_partners_biogrid(uniprot_ids, output_folder):
     # Placeholder for extracting interaction partners from BioGRID data
 
+
+{
+    "ABSD": ["123", "456", "789"],
+    "ABSF": ["123", "456", "789"]
+}
+
 def create_mfa(interaction_partners: dict) -> Union[str, None]:
     base_url = "https://www.uniprot.org/uniprot/"
     
@@ -116,13 +122,18 @@ def create_mfa(interaction_partners: dict) -> Union[str, None]:
             uniprot_ids = [key, value]
             sequences = []
 
-            for uniprot_id in uniprot_ids:
+            for i, uniprot_id in enumerate(uniprot_ids):
                 url = base_url + uniprot_id + ".fasta"
                 response = requests.get(url)
 
                 if response.status_code == 200:
                     fasta_data = response.text
                     seq_record = SeqIO.read(StringIO(fasta_data), "fasta")
+                    ## The pseudocode below is one possible implementation of the 'mutation'
+                    ## that needs to be done; MISSENSE could be a command-line argument
+                    ## However, keep in mind that SeqIO might play a role in 
+                    ## if i == 0 & MISSENSE == True;
+                    ##    seq_record = mutate(seq_record)
                     sequences.append(seq_record)
                 else:
                     print(f"Error: Unable to retrieve sequence for {uniprot_id}")

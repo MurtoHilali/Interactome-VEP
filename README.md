@@ -68,3 +68,8 @@ We welcome contributions to the project! If you have any suggestions for new fea
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## TODO
+
+* Create a script that runs statistical analysis the feature data for both WT and MS complexes (i.e. the CSV ouput from PI-Score)
+* Standardize/combine the output 
