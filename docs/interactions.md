@@ -8,6 +8,13 @@ This script fetches protein interaction data from MINT or BioGRID and generates 
 - `requests`
 - `pandas`
 - `biopython`
+- `typing`
+- `io`
+- `unipressed`
+- `time`
+- `argparse`
+- `os`
+- `json`
 
 ## Usage
 
@@ -39,13 +46,17 @@ python interactions.py <uniprot_ids> --source <mint|biogrid> [--output_folder <o
 
 Fetches interaction data from MINT and saves it as TSV files in the specified output folder.
 
-### `get_biogrid_data(output_folder, uniprot_ids, access_key)`
-
-Fetches interaction data from BioGRID (currently under development) and saves it as TSV files in the specified output folder.
-
 ### `extract_interaction_partners_mint(uniprot_ids, output_folder)`
 
 Extracts interaction partner UniProt IDs from MINT data and returns a dictionary with UniProt IDs as keys and a list of interaction partner UniProt IDs as values.
+
+### `get_biogrid_data(output_folder, uniprot_ids, access_key)`
+
+Fetches interaction data from BioGRID and saves it as TSV files in the specified output folder. Also produces  `interaction_partners.json`.
+
+### `extract_interaction_partners_biogrid(uniprot_ids, output_folder)`
+
+Converts BioGRID gene names to UniProt IDs and returns a dictionary with UniProt IDs as keys and a list of interaction partner UniProt IDs as values.
 
 ### `create_mfa(interaction_partners: dict)`
 
@@ -71,8 +82,18 @@ This will create the following files and folders:
 - `interactions/interaction_partners.json`: A JSON file containing the dictionary of interaction partners
 - `complexes/`: A folder containing multi-FASTA files for each pair of interaction partners
 
-## Notes
+Similarly for BioGRID, run the following command:
 
-- The BioGRID data fetching and processing functions are still in development. Once implemented, you will be able to use the `--source biogrid` option to fetch interaction data from BioGRID.
+```
+python interactions.py Q15113 P20908 Q9BQB4 --source biogrid --access_key "accesskey"
+```
+You can obtain an [access key](https://webservice.thebiogrid.org/) from the BioGRID website.
+
+## Notes
 - The script currently generates multi-FASTA files for each pair of interaction partners without accounting for other proteins that may be required to properly model a complex. The script also assumes all complexes are heterodimeric, which may not be the case.
+- Output folder issue fixed (Thank you [Kritika Grover]())
 - Some of the complexes may have exact experimental structures in the PDB, which would be preferred for most analyses.
+
+## TODO
+* The `extract_interaction_partners_{mint, biogrid}` functions use much of the same code, and can probably be combined.
+* Include a means of checking 

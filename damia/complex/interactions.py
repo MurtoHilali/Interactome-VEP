@@ -3,9 +3,18 @@ import pandas as pd
 from io import StringIO
 from typing import List, Union
 from Bio import SeqIO
+from unipressed import IdMappingClient
+import time
 import os
 import argparse
 import json
+
+## I don't know if you ever changed the script up on your GitHub, but this is the corrected version :) 
+
+### ===============================================================
+###          MINT Option: Data retrieval and
+###           interaction partner extraction.
+### ===============================================================
 
 def get_mint_data(output_folder, uniprot_ids):
     base_url = "http://www.ebi.ac.uk/Tools/webservices/psicquic/mint/webservices/current/search/query"
@@ -26,6 +35,10 @@ def get_mint_data(output_folder, uniprot_ids):
         "Interaction Identifier",
         "Intact MI-Score"
     ]
+
+    if output_folder == List:
+       output_folder = str(output_folder[0])
+    
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -39,10 +52,48 @@ def get_mint_data(output_folder, uniprot_ids):
         raw_data = response.text
 
         # Save data to a TSV file named after the UniProt ID
-        with open(f"{output_folder}/{uniprot_id}.tsv", "w") as output_file:
+        with open(os.path.join(output_folder, f"{uniprot_id}.tsv"), "w") as output_file:
             headers_line = '\t'.join(mitab_columns) + '\n'
             output_file.write(headers_line)
             output_file.write(raw_data)
+
+def extract_interaction_partners_mint(uniprot_ids, output_folder):
+    interaction_partners = {}
+
+    for uniprot_id in uniprot_ids:
+        mint_file = os.path.join(output_folder, f"{uniprot_id}.tsv")
+
+        if os.path.exists(mint_file):
+            mint_df = pd.read_csv(mint_file, sep="\t")
+
+            if 'ID A' in mint_df or 'ID B' in mint_df:
+                # Extract interaction partner UniProt IDs from both A and B columns
+                interaction_partners_a = mint_df.loc[mint_df['ID A'].str.startswith('uniprotkb:'), 'ID A'].str.replace('uniprotkb:', '')
+                interaction_partners_b = mint_df.loc[mint_df['ID B'].str.startswith('uniprotkb:'), 'ID B'].str.replace('uniprotkb:', '')
+
+                # Combine and remove duplicates
+                all_interaction_partners = pd.concat([interaction_partners_a, interaction_partners_b], axis=0).drop_duplicates().tolist()
+
+                # Remove the submitted UniProt ID from the list if present
+                all_interaction_partners = [partner for partner in all_interaction_partners if partner != uniprot_id]
+
+                # Add interaction partners to the dictionary
+                interaction_partners[uniprot_id] = all_interaction_partners
+            else: 
+                print(f"Error: Required columns not found in {mint_file}")
+        else:
+            print(f"Error: Mint file not found for {uniprot_id}")
+
+    # Save the results as a JSON file
+    with open(f"{output_folder}/interaction_partners.json", "w") as f:
+        json.dump(interaction_partners, f, indent=4)
+
+    return interaction_partners
+
+### ===============================================================
+###          BioGRID Option: Data retrieval and
+###           interaction partner extraction.
+### ===============================================================
 
 def get_biogrid_data(output_folder, uniprot_ids, access_key):
     base_url = "https://webservice.thebiogrid.org/interactions/"
@@ -72,44 +123,53 @@ def get_biogrid_data(output_folder, uniprot_ids, access_key):
         else:
             print(f"Error fetching data for {uniprot_id}: {response.status_code}")
 
-def extract_interaction_partners_mint(uniprot_ids, output_folder):
+def extract_interaction_partners_biogrid(uniprot_ids, output_folder):
     interaction_partners = {}
 
     for uniprot_id in uniprot_ids:
-        mint_file = os.path.join(output_folder, f"{uniprot_id}.tsv")
+        biogrid_file = os.path.join(output_folder, f"{uniprot_id}.tsv")
 
-        if os.path.exists(mint_file):
-            mint_df = pd.read_csv(mint_file, sep="\t")
+        if os.path.exists(biogrid_file):
+            biogrid_df = pd.read_csv(biogrid_file, sep="\t")
+            
+            symbA = "Official Symbol Interactor A"
+            symbB = "Official Symbol Interactor B"
+            
+            if symbA in biogrid_df or symbB in biogrid_df:
+                # Extract interaction partner symbols from both Official Symbol Interactor {A,B} columns
+                interaction_partners_a = biogrid_df[symbA]
+                interaction_partners_b = biogrid_df[symbB]
+
+                # Combine and remove duplicates
+                all_interaction_partners = pd.concat([interaction_partners_a, interaction_partners_b], axis=0).drop_duplicates().tolist()
+
+                # Convert from official gene symbol to UniProt ID format
+                request = IdMappingClient.submit(
+                    source = "GeneCards", 
+                    dest = "UniProtKB", 
+                    ids = all_interaction_partners
+                )
+
+                time.sleep(1.0)
+                results = list(request.each_result())
+
+                all_interaction_partners = list(result["to"] for result in results)
+
+                # Remove the submitted UniProt ID from the list if present
+                all_interaction_partners = [partner for partner in all_interaction_partners if partner != uniprot_id]
+
+                # Add interaction partners to the dictionary
+                interaction_partners[uniprot_id] = all_interaction_partners
+            else: 
+                print(f"Error: Required columns not found in {biogrid_file}")
         else:
-            mint_df = pd.DataFrame()
-
-        # Extract interaction partner UniProt IDs from both A and B columns
-        interaction_partners_a = mint_df.loc[mint_df['ID A'].str.startswith('uniprotkb:'), 'ID A'].str.replace('uniprotkb:', '')
-        interaction_partners_b = mint_df.loc[mint_df['ID B'].str.startswith('uniprotkb:'), 'ID B'].str.replace('uniprotkb:', '')
-
-        # Combine and remove duplicates
-        all_interaction_partners = pd.concat([interaction_partners_a, interaction_partners_b], axis=0).drop_duplicates().tolist()
-
-        # Remove the submitted UniProt ID from the list if present
-        all_interaction_partners = [partner for partner in all_interaction_partners if partner != uniprot_id]
-
-        # Add interaction partners to the dictionary
-        interaction_partners[uniprot_id] = all_interaction_partners
+            print(f"Error: BioGRID file not found for {uniprot_id}")
 
     # Save the results as a JSON file
     with open(f"{output_folder}/interaction_partners.json", "w") as f:
         json.dump(interaction_partners, f, indent=4)
 
     return interaction_partners
-
-# def extract_interaction_partners_biogrid(uniprot_ids, output_folder):
-    # Placeholder for extracting interaction partners from BioGRID data
-
-
-{
-    "ABSD": ["123", "456", "789"],
-    "ABSF": ["123", "456", "789"]
-}
 
 def create_mfa(interaction_partners: dict) -> Union[str, None]:
     base_url = "https://www.uniprot.org/uniprot/"
@@ -152,24 +212,28 @@ def main():
     parser = argparse.ArgumentParser(description='Fetch interaction data from MINT or BioGRID.')
     parser.add_argument('uniprot_ids', nargs='+', help='List of UniProt IDs to fetch data for.')
     parser.add_argument('--source', choices=['mint', 'biogrid'], required=True, help='Choose the data source (mint or biogrid).')
-    parser.add_argument('--output_folder', default='interactions', help='Output folder for interaction data (default: interactions).')
+    parser.add_argument('--output_folder', nargs=1, default='interactions', help='Output folder for interaction data (default: interactions).')
     parser.add_argument('--access_key', help='Access key for BioGRID API (required if source is biogrid).')
 
     args = parser.parse_args()
 
+    output_folder = args.output_folder[0] if isinstance(args.output_folder, list) else args.output_folder
+
     if not os.path.exists(args.output_folder):
         os.makedirs(args.output_folder)
+    
+    interaction_partners = {}
 
     if args.source == 'mint':
-        get_mint_data(args.uniprot_ids, args.output_folder)
+        get_mint_data(args.output_folder, args.uniprot_ids)
         interaction_partners = extract_interaction_partners_mint(args.uniprot_ids, args.output_folder)
         create_mfa(interaction_partners)
     elif args.source == 'biogrid':
         if not args.access_key:
             raise ValueError("Access key is required when the source is set to 'biogrid'.")
-        get_biogrid_data(args.uniprot_ids, args.access_key, args.output_folder)
-        # Uncomment the following line when the BioGRID function is implemented
-        # interaction_partners = extract_interaction_partners_biogrid(args.uniprot_ids, args.output_folder)
+        get_biogrid_data(args.output_folder, args.uniprot_ids, args.access_key)
+        interaction_partners = extract_interaction_partners_biogrid(args.uniprot_ids, args.output_folder)
+        create_mfa(interaction_partners)
 
     # Save the interaction partners dictionary as a JSON file
     with open(f"{args.output_folder}/interaction_partners.json", "w") as json_file:
