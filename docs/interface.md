@@ -1,6 +1,6 @@
 # Interface: Chain-Residue Pair Analysis Tool
 
-This Python script analyzes occurrences of a chain-residue pair across multiple TSV files and calculates a consensus score based on their presence. The script also calculates the average distance (either alpha or beta) between the chain-residue pairs in the provided TSV files. `partners.py` aims to show often a given residue appears in interfaces and, when it does, how far it is from the other residues it interacts with.
+This Python script analyzes occurrences of a chain-residue pair across multiple TSV files and calculates a consensus score based on their presence. The script also calculates the average distance (either alpha or beta) between the chain-residue pairs in the provided TSV files. `interface.py` aims to show often a given residue (at a specified chain) appears in interfaces and, when it does, how far it is, on average, from the other residues it interacts with. 
 
 
 ## Dependencies
