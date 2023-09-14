@@ -1,6 +1,6 @@
 # Fetch Interaction Data Script
 
-This script fetches protein interaction data from MINT or BioGRID and generates multi-FASTA files for each pair of interaction partners. **Note**: The BioGRID processing functions are still in development, and only MINT is currently working.
+This script fetches protein interaction data from MINT or BioGRID and generates multi-FASTA files for each pair of interaction partners. Its purpose is to create MFA inputs for AF2-multimer to make complex predictions.
 
 ## Requirements
 
@@ -96,4 +96,4 @@ You can obtain an [access key](https://webservice.thebiogrid.org/) from the BioG
 
 ## TODO
 * The `extract_interaction_partners_{mint, biogrid}` functions use much of the same code, and can probably be combined.
-* Include a means of checking 
+* Include a means of checking PDB for existing experimental model.

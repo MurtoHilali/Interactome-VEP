@@ -19,7 +19,7 @@ def analyze_residue_interactions(input_files, target_chain, target_residue, outp
                     interacting_residue = row[3] if chain_a == target_chain else row[0]
                     residue_counts[interacting_residue] += 1
                     ## TODO: The current output for this loop is a dictionary; if you're capturing
-                    ## distance as well, a different data structure could also work: use you
+                    ## distance as well, a different data structure could also work: use your
                     ## judgement.
 
     # Write the output data to the TSV file

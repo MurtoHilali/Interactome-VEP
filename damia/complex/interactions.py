@@ -9,8 +9,6 @@ import os
 import argparse
 import json
 
-## I don't know if you ever changed the script up on your GitHub, but this is the corrected version :) 
-
 ### ===============================================================
 ###          MINT Option: Data retrieval and
 ###           interaction partner extraction.

@@ -1,6 +1,6 @@
 # Similarity: Determine Overlap Between Complex Interactions
 
-This script calculates the Jaccard Index similarity between multiple TSV files. Users can provide options to keep only the residue numbers, remove duplicate residues, or both. The script saves the pairwise similarity scores in a TSV file and writes a summary of the results to a text file.
+This script calculates the Jaccard Index similarity between multiple TSV files. Users can provide options to keep only the residue numbers, remove duplicate residues, or both. The script saves the pairwise similarity scores in a TSV file and writes a summary of the results to a text file. `similarity.py` tells us how similar the interfaces of different complexes are to each other.
 
 ## Command-Line Arguments
 

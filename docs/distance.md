@@ -1,6 +1,6 @@
 # Distance: A Residue Distance Calculator
 
-This script calculates the distances between the alpha- and beta-carbons of residue pairs in a PDB file, using PyMOL. The input is an `.ic` file containing the list of residue pairs, and the output is a TSV file containing the calculated distances.
+This script calculates the distances between the alpha- and beta-carbons of interface residue pairs in a PDB file, using PyMOL. The input is an `.ic` file containing the list of residue pairs, and the output is a TSV file containing the calculated distances. This provides some information about interface quality and proximity.
 
 ## Usage
 

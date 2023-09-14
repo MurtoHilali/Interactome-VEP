@@ -60,10 +60,13 @@ For specific usage examples and explanations of each tool, please refer to the d
 - [interface.md](docs/interface.md): Interface determination for chain-residue pairs
 - [partners.md](docs/partners.md): Interaction partners of chain-residue pairs
 - [similarity.md](docs/similarity.md): Jaccard index similarity calculation
+- [avgfeatures.md](docs/avgfeatures.md): Averages of PI-score output
+- [interactiond.md](docs/interactions.md): Interaction search and MFA creation
+- [whitney.md](docs/whitney.md): U-test between WT and missense interfaces.
 
 ## Pipeline Implementation
 
-While DAMIA is not yet implemented as a fully autonomous pipeline, the repository comes with scripts that allow users to streamline the interaction comparison analysis
+While DAMIA is not yet implemented as a fully autonomous pipeline, the repository comes with scripts that allow users to streamline the interaction comparison analysis. For ideas on the which order to use these tools in, refer to the workflow diagram.
 
 ## Contributing
 
